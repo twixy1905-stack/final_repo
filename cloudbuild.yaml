@@ -17,26 +17,20 @@ steps:
       - push
       - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
 
-  # Get GKE credentials so kubectl can talk to the cluster
-  - name: gcr.io/cloud-builders/gcloud
-    id: "get-credentials"
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    id: deploy
+    entrypoint: bash
     args:
-      - container
-      - clusters
-      - get-credentials
-      - ${_CLUSTER_NAME}
-      - --region=${_REGION}
-      - --project=${_PROJECT_ID}
+      - -c
+      - |
+        echo "Getting GKE credentials..."
+        gcloud container clusters get-credentials "${_CLUSTER_NAME}" \
+          --region="${_REGION}" \
+          --project="${_PROJECT_ID}"
 
-  # Restart rollout so pods get recreated and pull :latest
-  - name: gcr.io/cloud-builders/kubectl
-    id: "rollout-restart"
-    args:
-      - rollout
-      - restart
-      - deployment/myapp
-      - --namespace=default
-
+        echo "Restarting deployment..."
+        kubectl rollout restart deployment/myapp --namespace=default
+        
 options:
   logging: CLOUD_LOGGING_ONLY
 
