@@ -18,10 +18,10 @@ steps:
       - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
 
   - name: gcr.io/cloud-builders/kubectl
-      id: rollout-restart
-      env:
-        - CLOUDSDK_CORE_PROJECT=${_PROJECT_ID}
-        - CLOUDSDK_COMPUTE_REGION=${_REGION}
+    id: rollout-restart
+    env:
+      - CLOUDSDK_CORE_PROJECT=${_PROJECT_ID}
+      - CLOUDSDK_COMPUTE_REGION=${_REGION}
     args:
       - rollout
       - restart
