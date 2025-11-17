@@ -1,9 +1,35 @@
 steps:
+  # Just your existing step
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: bash
     args:
       - "-c"
       - "echo build"
 
+  # Get GKE credentials so kubectl can talk to the cluster
+  - name: gcr.io/cloud-builders/gcloud
+    id: "get-credentials"
+    args:
+      - container
+      - clusters
+      - get-credentials
+      - ${_CLUSTER_NAME}
+      - --region=${_REGION}
+      - --project=${_PROJECT_ID}
+
+  # Restart rollout so pods get recreated and pull :latest
+  - name: gcr.io/cloud-builders/kubectl
+    id: "rollout-restart"
+    args:
+      - rollout
+      - restart
+      - deployment/myapp
+      - --namespace=default
+
 options:
   logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _PROJECT_ID: "devops-gke-12345"
+  _REGION: "us-east-1"
+  _CLUSTER_NAME: "devops-gke-cluster"

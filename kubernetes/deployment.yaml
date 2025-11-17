@@ -3,7 +3,12 @@ kind: Deployment
 metadata:
   name: myapp
 spec:
-  replicas: 2
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: "100%"
+      maxUnavailable: "0%"
   selector:
     matchLabels:
       app: myapp
@@ -14,6 +19,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: IMAGE_PLACEHOLDER
+        image: us-central1-docker.pkg.dev/devops-gke-12345/my-repo
+        imagePullPolicy: Always
         ports:
         - containerPort: 80

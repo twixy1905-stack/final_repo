@@ -1,3 +1,3 @@
-variable "project_id" {type=string}
-variable "region" {type=string  default="us central1"}
-variable "cluster_name" {type=string default="gke team cluster"}
+variable "project_id" {type=string default="devops-gke-12345"}
+variable "region" {type=string  default="us-east-1"}
+variable "cluster_name" {type=string default="devops-gke-cluster"}
