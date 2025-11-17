@@ -1,7 +1,6 @@
 steps:
-  name: gcr.io/cloud builders/gcloud
-  entrypoint: bash
-  args:
-    "bash"
-    "-c"
-    "echo build"
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - "-c"
+      - "echo build"
