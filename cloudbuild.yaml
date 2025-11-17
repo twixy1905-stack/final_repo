@@ -1,10 +1,19 @@
 steps:
-  # Just your existing step
-  - name: gcr.io/cloud-builders/gcloud
-    entrypoint: bash
+# 1) Build Docker image with :latest tag
+  - name: gcr.io/cloud-builders/docker
+    id: "build-image"
     args:
-      - "-c"
-      - "echo build"
+      - build
+      - "-t"
+      - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
+      - "."
+
+  # 2) Push image to Artifact Registry
+  - name: gcr.io/cloud-builders/docker
+    id: "push-image"
+    args:
+      - push
+      - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
 
   # Get GKE credentials so kubectl can talk to the cluster
   - name: gcr.io/cloud-builders/gcloud
@@ -31,5 +40,5 @@ options:
 
 substitutions:
   _PROJECT_ID: "devops-gke-12345"
-  _REGION: "us-east-1"
+  _REGION: "us-east1"
   _CLUSTER_NAME: "devops-gke-cluster"

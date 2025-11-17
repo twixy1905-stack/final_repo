@@ -4,11 +4,11 @@ metadata:
   name: myapp
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: "100%"
-      maxUnavailable: "0%"
+  # strategy:
+  #   type: RollingUpdate
+  #   rollingUpdate:
+  #     maxSurge: "100%"
+  #     maxUnavailable: "0%"
   selector:
     matchLabels:
       app: myapp
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: us-central1-docker.pkg.dev/devops-gke-12345/my-repo
+        image: us-central1-docker.pkg.dev/devops-gke-12345/my-repo/myapp
         imagePullPolicy: Always
-        ports:
+        ports:  
         - containerPort: 80
