@@ -1,5 +1,5 @@
 steps:
-# 1) Build Docker image with :latest tag
+  # 1) Build Docker image with :latest tag
   - name: gcr.io/cloud-builders/docker
     id: "build-image"
     args:
@@ -17,21 +17,23 @@ steps:
       - push
       - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
 
+  # 3) Restart rollout (kubectl builder will run gcloud get-credentials internally)
   - name: gcr.io/cloud-builders/kubectl
     id: rollout-restart
     env:
       - CLOUDSDK_CORE_PROJECT=${_PROJECT_ID}
-      - CLOUDSDK_COMPUTE_REGION=${_REGION}
+      - CLOUDSDK_COMPUTE_REGION=${_REGION}            # or CLOUDSDK_COMPUTE_ZONE for zonal clusters
+      - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}   # cluster name
     args:
       - rollout
       - restart
       - deployment/myapp
       - --namespace=default
-          
+
 options:
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
   _PROJECT_ID: "devops-gke-12345"
-  _REGION: "us-east1"
+  _REGION: "us-east1"              # must match your cluster’s region if it's REGIONAL
   _CLUSTER_NAME: "devops-gke-cluster"
