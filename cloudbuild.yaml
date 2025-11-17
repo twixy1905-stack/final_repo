@@ -4,9 +4,11 @@ steps:
     id: "build-image"
     args:
       - build
-      - "-t"
-      - "us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest"
-      - "."
+      - -f
+      - app/Dockerfile
+      - -t
+      - us-central1-docker.pkg.dev/${_PROJECT_ID}/my-repo/myapp:latest
+      - app
 
   # 2) Push image to Artifact Registry
   - name: gcr.io/cloud-builders/docker
