@@ -4,11 +4,6 @@ metadata:
   name: myapp
 spec:
   replicas: 1
-  # strategy:
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     maxSurge: "100%"
-  #     maxUnavailable: "0%"
   selector:
     matchLabels:
       app: myapp
@@ -21,5 +16,25 @@ spec:
       - name: myapp
         image: us-central1-docker.pkg.dev/devops-gke-12345/my-repo/myapp
         imagePullPolicy: Always
-        ports:  
+        ports:
         - containerPort: 80
+
+        # 🔍 Liveness probe – checks if the app is still alive
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+        # ✅ Readiness probe – controls if pod gets traffic
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
